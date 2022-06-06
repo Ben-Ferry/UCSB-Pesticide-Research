@@ -5,7 +5,6 @@ import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import pyproj
 import json
 
 
@@ -43,37 +42,72 @@ def load_in_data(shp_file_towns, chloro2014, chloro2015, chloro2016,
                                  "SITE NAME"]]
     chloro_data = sb_shape_towns.merge(chloro_csv, left_on="CO_MTRS",
                                        right_on="COMTRS", how="left")
-    print(chloro_data["SITE NAME"].unique())
+    print(chloro_data["CHEMICAL NAME"].unique())
     return chloro_data
 
 
 def plot_santa_barbara_sections(chloro_data):
-    fig, ax = plt.subplots(1)
-    plot_by_chem = chloro_data[["POUNDS CHEMICAL APPLIED", "CHEMICAL NAME",
-                                "geometry"]]
-    plot_by_chem = plot_by_chem.dissolve(by="CHEMICAL NAME", aggfunc="sum")
-    chloro_data.plot(ax=ax, color="#EEEEEE")
-    chloro_data.plot(ax=ax, column="POUNDS CHEMICAL APPLIED", legend=True)
-    plt.savefig("map.png")
+    chloro_mask = chloro_data["CHEMICAL NAME"] == "CHLOROPICRIN"
+    chloro_plot = chloro_data.loc[chloro_mask, ["POUNDS CHEMICAL APPLIED",
+                                                "geometry", "CHEMICAL NAME"]]
+    chloro_plot = chloro_plot.dissolve(by="CHEMICAL NAME", aggfunc="sum")
+    print(chloro_plot)
+    dichlo_mask = chloro_data["CHEMICAL NAME"] == "1,3-DICHLOROPROPENE"
+    dichlo_plot = chloro_data.loc[dichlo_mask, ["POUNDS CHEMICAL APPLIED",
+                                                "geometry", "CHEMICAL NAME"]]
+
+    dichlo_plot = dichlo_plot.dissolve(by="CHEMICAL NAME", aggfunc="sum")
+    print(dichlo_plot)
+    mineral_mask = chloro_data["CHEMICAL NAME"] == "MINERAL OIL"
+    mineral_plot = chloro_data.loc[mineral_mask, ["POUNDS CHEMICAL APPLIED",
+                                                  "geometry", "CHEMICAL NAME"]]
+    mineral_plot = mineral_plot.dissolve(by="CHEMICAL NAME", aggfunc="sum")
+    potas_mask = chloro_data["CHEMICAL NAME"] == "POTASSIUM N-METHYLDITHIOCARBAMATE"
+    potas_plot = chloro_data.loc[potas_mask, ["POUNDS CHEMICAL APPLIED",
+                                              "geometry", "CHEMICAL NAME"]]
+    potas_plot = potas_plot.dissolve(by="CHEMICAL NAME", aggfunc="sum")
+    fig, [[ax1, ax2], [ax3, ax4]] = plt.subplots(2, 2)
+    chloro_data.plot(ax=ax1, color="#EEEEEE")
+    chloro_data.plot(ax=ax2, color="#EEEEEE")
+    chloro_data.plot(ax=ax3, color="#EEEEEE")
+    chloro_data.plot(ax=ax4, color="#EEEEEE")
+    chloro_plot.plot(ax=ax1, column="POUNDS CHEMICAL APPLIED", legend=True,
+                     cmap="plasma")
+    dichlo_plot.plot(ax=ax2, column="POUNDS CHEMICAL APPLIED", legend=True)
+    mineral_plot.plot(ax=ax3, column="POUNDS CHEMICAL APPLIED", legend=True,
+                      cmap="magma")
+    potas_plot.plot(ax=ax4, column="POUNDS CHEMICAL APPLIED", legend=True,
+                    cmap="cividis")
+    ax1.set_title("AMOUNT OF CHLOROPRICIN", loc="center", fontsize=6)
+    ax2.set_title
+    plt.subplots_adjust(left=0.05,
+                        bottom=0.1,
+                        right=0.9,
+                        top=0.9,
+                        wspace=0.4,
+                        hspace=0.4)
+    plt.show()
+    # plt.savefig("map.png")
 
 
-def plot_pest_plotly(Chloro_data):
-    Chloro_data.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
-    fig = px.choropleth(Chloro_data, geojson=Chloro_data.geometry, locations=Chloro_data.index, color="POUNDS CHEMICAL APPLIED")
-    fig.update_geos(fitbounds="locations", visible=False)
-    # fig.show()
-    pass
+def plot_pest_plotly(chloro_data, shape_path):
+    shape_path_gdf = gpd.read_file(shape_path)
+    shape_path_gdf.to_file("/Users/benferry/Desktop/GitHub/CSE-163-Final/"
+                           "Santa_Barbara_sections\\"
+                           "Santa_Barbara_sections_gpd.json",
+                           driver='GeoJSON')
 
 
-def plot_chem_produce(Chloro_data):
-    fig, ax = plt.subplots(1)
-    plot_by_produce = Chloro_data[["POUNDS CHEMICAL APPLIED", "geometry",
-                                  "SITE NAME"]]
-    plot_by_produce = plot_by_produce.dissolve(by="SITE NAME",
-                                               aggfunc="sum")
-    Chloro_data.plot(ax=ax, color="#EEEEEE")
-    Chloro_data.plot(ax=ax, column="POUNDS CHEMICAL APPLIED", legend=True,)
-    plt.savefig("Produce map")
+# def plot_chem_produce(Chloro_data):
+#     fig, ax = plt.subplots(1)
+#     plot_by_produce = Chloro_data[["POUNDS CHEMICAL APPLIED", "geometry",
+#                                   "SITE NAME"]]
+#     plot_by_produce = plot_by_produce.dissolve(by="SITE NAME",
+#                                                aggfunc="sum")
+#     Chloro_data.plot(ax=ax, color="#EEEEEE")
+#     Chloro_data.plot(ax=ax, column="POUNDS CHEMICAL APPLIED", legend=True,)
+#     plt.savefig("Produce map")
+
 
 # def alt_plot_chloro(chloro_data):
 #     # selection = alt.selection_multi(fields=[year])
@@ -131,9 +165,9 @@ def main():
                             "~/Desktop/GitHub/CSE-163-Final/"
                             "Data_csv/2011_data.csv")
     plot_santa_barbara_sections(chloro_data)
-    # alt_plot_chloro(chloro_data)
-    # plot_pest_plotly(chloro_data)
-    plot_chem_produce(chloro_data)
+    # plot_chem_produce(chloro_data)
+
+    
 
 
 if __name__ == '__main__':

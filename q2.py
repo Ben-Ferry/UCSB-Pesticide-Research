@@ -189,8 +189,8 @@ def main():
     This is the main function.
     """
     chloro_data = load_in_data(
-        "/Users/thomaskanenaga/Documents/GitHub/CSE-163-Final/Santa_Barbara_sections/"
-        "pls_42_nad83.shp",
+        "/Users/thomaskanenaga/Documents/GitHub/CSE-163-Final/"
+        "Santa_Barbara_sections/pls_42_nad83.shp",
         "~/Documents/GitHub/CSE-163-Final/" "Data_csv/2014_data.csv",
         "~/Documents/GitHub/CSE-163-Final/" "Data_csv/2015_data.csv",
         "~/Documents/GitHub/CSE-163-Final/" "Data_csv/2016_data.csv",

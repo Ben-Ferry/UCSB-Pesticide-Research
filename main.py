@@ -40,7 +40,6 @@ def load_in_data(shp_file_towns, chloro2014, chloro2015, chloro2016,
                                  "SITE NAME"]]
     chloro_data = sb_shape_towns.merge(chloro_csv, left_on="CO_MTRS",
                                        right_on="COMTRS", how="left")
-    print(chloro_data["CHEMICAL NAME"].unique())
     return chloro_data
 
 

@@ -20,6 +20,10 @@ def load_in_data(
     data2012,
     data2011,
 ):
+    """
+    Loads in all the pesticide data for Santa Barbra County for the years
+    2018-2008 and the shapefile and combines them into one geopandasDataFrame.
+    """
     sb_shape_towns = gpd.read_file(shp_file_towns)
     sb_shape_towns = sb_shape_towns[["CO_MTRS", "geometry"]]
     chloro2014 = pd.read_csv(chloro2014)
@@ -80,6 +84,11 @@ def load_in_data(
 
 
 def plot_santa_barbara_sections(chloro_data):
+    """
+    This function take in the created geopandasDF and filters the data
+    into four geoDFs. The function also plots each of these DFs as
+    subplots.
+    """
     chloro_mask = chloro_data["CHEMICAL NAME"] == "CHLOROPICRIN"
     chloro_plot = chloro_data.loc[
         chloro_mask, ["POUNDS CHEMICAL APPLIED", "geometry", "CHEMICAL NAME"]
@@ -128,6 +137,12 @@ def plot_santa_barbara_sections(chloro_data):
 
 
 def plot_chemical_totals(chloro_data):
+    """
+    This function take in the created geopandasDF and filters the data
+    into four geoDFs by chemical name and sums the pounds of chemcial
+    applied. The function also plots each of these DFs as
+    subplots.
+    """
     chloro_mask = chloro_data["CHEMICAL NAME"] == "CHLOROPICRIN"
     chloro_plot = chloro_data.loc[
         chloro_mask, ["POUNDS CHEMICAL APPLIED", "geometry", "CHEMICAL NAME"]

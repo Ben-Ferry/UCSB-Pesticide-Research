@@ -82,7 +82,6 @@ def plot_santa_barbara_sections(chloro_data):
                         top=0.9,
                         wspace=0.4,
                         hspace=0.4)
-    # plt.show()
     plt.savefig("Santa Barbara Chemicals by Section.png")
 
 
@@ -129,50 +128,6 @@ def plot_chemical_totals(chloro_data):
                         wspace=0.4,
                         hspace=0.4)
     plt.savefig("Santa Barbara Chemicals Total.png")
-# def plot_pest_plotly(chloro_data, shape_path):
-#     shape_path_gdf = gpd.read_file(shape_path)
-#     shape_path_gdf.to_file("/Users/benferry/Desktop/GitHub/CSE-163-Final/"
-#                            "Santa_Barbara_sections\\"
-#                            "Santa_Barbara_sections_gpd.json",
-#                            driver='GeoJSON')
-
-
-# def plot_chem_produce(Chloro_data):
-#     fig, ax = plt.subplots(1)
-#     plot_by_produce = Chloro_data[["POUNDS CHEMICAL APPLIED", "geometry",
-#                                   "SITE NAME"]]
-#     plot_by_produce = plot_by_produce.dissolve(by="SITE NAME",
-#                                                aggfunc="sum")
-#     Chloro_data.plot(ax=ax, color="#EEEEEE")
-#     Chloro_data.plot(ax=ax, column="POUNDS CHEMICAL APPLIED", legend=True,)
-#     plt.savefig("Produce map")
-
-
-# def alt_plot_chloro(chloro_data):
-#     # selection = alt.selection_multi(fields=[year])
-#     # color = alt.condition(selection,
-#     #                 alt.Color(color_column, type='nominal',
-#     #                         scale=alt.Scale(scheme=color_scheme)),
-#     #                 alt.value('lightgray'))
-#     # chloro_json = json.loads(chloro_data.to_json())
-#     # chloro_alt_data = alt.Data(values=chloro_json['features'])
-#     chem_dropdown = alt.binding_select(options=chloro_data["CHEMICAL NAME"].unique())
-#     selection = alt.selection_single(fields=["CHEMICAL NAME"],
-#                                      bind=chem_dropdown, name="Chemical",
-#                                      init={"CHEMICAL NAME": "CHLOROPRICIN"})
-#     base = alt.Chart(chloro_data, title="CHEMICALS").mark_geoshape(
-#         fill="lightgray",
-#         stroke="black",
-#         strokeWidth=1
-#         ).properties(width=800, height=800)
-#     choro = alt.Chart(chloro_data).mark_geoshape(
-#         ).encode(color=alt.Color("POUNDS CHEMICAL APPLIED:Q")
-#         ).add_selection(selection
-#         ).transform_filter(
-#             selection
-#         )
-
-#     (base + choro).save("Chemical_map.html")
 
 
 def main():
